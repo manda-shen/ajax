@@ -1,50 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>學生資料管理系統</title>
-    <link rel="shortcut icon" href="#" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <!---匯入要使用的函式庫--->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>學生資料管理系統</title>
+  <link rel="shortcut icon" href="#" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+    integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!---匯入要使用的函式庫--->
 
 
 </head>
+
 <body>
-  <h1 class="header">學生資料管理系統</h1>
 
-  
+  <div class="container navbar-collapse">
+    <h1 class="header">學生資料管理系統</h1>
+    <button class="btn btn-primary">增加學生</button>
+    <ul class="nav" id="classesList">
+    </ul>
+    <div class="classes"></div>
+
+  </div>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+    integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
+
 </html>
+
 <script>
-/************************************
-* 1.考慮觸發行為的事件
-* 2.建立監聽行為
-* 3.考慮是否需要代入參數
-* 4.是否會有回傳值？回傳值的功用及處理？
-* 5.是否需要更新畫面內容？更新畫面的方法？
-************************************/
+  getClasses();
+  /************************************
+  * 1.考慮觸發行為的事件
+  * 2.建立監聽行為
+  * 3.考慮是否需要代入參數
+  * 4.是否會有回傳值？回傳值的功用及處理？
+  * 5.是否需要更新畫面內容？更新畫面的方法？
+  ************************************/
+  // 取得班級資訊
+  function getClasses() {
+    $.get("./api/get_classes.php", function (classes) {
+      // console.log(classes);
+      let data = JSON.parse(classes);
+      data.forEach(function (item, idx) {
+        let c = `<li class="nav-item">
+                   <a class="nav-link" href="#">${item.classroom}</a>
+                 </li>`
+        $("#classesList").append(c);
+      })
+    })
+  }
 
+  //新增資料的函式
+  function create() {
 
-//新增資料的函式
-function create(){
+  }
 
-}
+  //查詢資料的函式
+  function query() {
 
-//查詢資料的函式
-function query(){
+  }
 
-}
+  //編輯資料的函式
+  function update() {
 
-//編輯資料的函式
-function update(){
+  }
 
-}
+  //刪除資料的函式
+  function del() {
 
-//刪除資料的函式
-function del(){
-
-}
+  }
 
 </script>
