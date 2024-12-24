@@ -20,15 +20,16 @@
 
   <div class="container navbar-collapse">
     <h1 class="header">學生資料管理系統</h1>
-    <button class="btn btn-primary">增加學生</button>
+    <button class="btn btn-primary" onclick="create()">增加學生</button>
     <ul class="nav" id="classesList">
     </ul>
-    <div class="classes">
+    <div class="table">
       <table id="students" class="w-100"></table>
     </div>
 
-  </div>
+    <div id="modal"></div>
 
+  </div>
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
@@ -44,6 +45,9 @@
 
 <script>
   getClasses();
+
+  // 先執行一個班級(加入預設班級資料)，讓進入畫面有資料
+  // query(101);
   /************************************
   * 1.考慮觸發行為的事件
   * 2.建立監聽行為
@@ -61,13 +65,19 @@
                    <a class="nav-link" href="javascript:query(${item.classroom})">${item.classroom}</a>
                  </li>`
         $("#classesList").append(c);
+        // 直接載入第一個班級的資料
+        query(data[0].classroom);
       })
     })
   }
 
-  //新增資料的函式
+  //載入新增資料的表單內容
   function create() {
-
+    $.get("./create_form.php", function (html) {
+      $("#modal").html(html);
+      let CreateModal = new bootstrap.Modal('#CreateModal');
+      CreateModal.show();
+    })
   }
 
   //查詢指定班級學生資料的函式
@@ -95,7 +105,7 @@
                    <td class='p-2'>${item.address}</td>
                    <td class='p-2'>
                     <button class='btn btn-success'>編輯</button>
-                    <button class='btn btn-danger' onclick='del(${item.id})'>刪除</button>
+                    <button class='btn btn-danger' onclick='del(${item.id},${item.classroom})'>刪除</button>
                    </td>
                    </tr>`;
         $("#students").append(row);
@@ -109,12 +119,13 @@
   }
 
   //刪除資料的函式
-  function del(id) {
+  function del(id, classroom) {
     let chk = confirm('確定要刪除嗎?');
     if (chk) {
 
-      $.post("./api/delete.php", { id }, function () {
-        console.log('deleted');
+      $.post("./api/delete.php", { id, classroom }, function (res) {
+        // console.log('res');
+        query(res);
       })
     }
   }
