@@ -23,7 +23,9 @@
     <button class="btn btn-primary">增加學生</button>
     <ul class="nav" id="classesList">
     </ul>
-    <div class="classes"></div>
+    <div class="classes">
+      <table id="students" class="w-100"></table>
+    </div>
 
   </div>
 
@@ -56,7 +58,7 @@
       let data = JSON.parse(classes);
       data.forEach(function (item, idx) {
         let c = `<li class="nav-item">
-                   <a class="nav-link" href="#">${item.classroom}</a>
+                   <a class="nav-link" href="javascript:query(${item.classroom})">${item.classroom}</a>
                  </li>`
         $("#classesList").append(c);
       })
@@ -68,9 +70,37 @@
 
   }
 
-  //查詢資料的函式
-  function query() {
-
+  //查詢指定班級學生資料的函式
+  function query(code) {
+    $.get("./api/query.php", { code }, function (students) {
+      let data = JSON.parse(students);
+      // console.log(data);
+      let th = `<tr>
+               <th>學號</th>
+               <th>座號</th>
+               <th>姓名</th>
+               <th>生日</th>
+               <th>科系</th>
+               <th>地址</th>
+               <th>功能</th>
+               </tr>`
+      $("#students").html(th);
+      data.forEach(function (item, idx) {
+        let row = `<tr>
+                   <td class='p-2'>${item.uni_id}</td>
+                   <td class='p-2'>${item.seat_num}</td>
+                   <td class='p-2'>${item.name}</td>
+                   <td class='p-2'>${item.birthday}</td>
+                   <td class='p-2'>${item.major}</td>
+                   <td class='p-2'>${item.address}</td>
+                   <td class='p-2'>
+                    <button class='btn btn-success'>編輯</button>
+                    <button class='btn btn-danger' onclick='del(${item.id})'>刪除</button>
+                   </td>
+                   </tr>`;
+        $("#students").append(row);
+      })
+    })
   }
 
   //編輯資料的函式
@@ -79,8 +109,14 @@
   }
 
   //刪除資料的函式
-  function del() {
+  function del(id) {
+    let chk = confirm('確定要刪除嗎?');
+    if (chk) {
 
+      $.post("./api/delete.php", { id }, function () {
+        console.log('deleted');
+      })
+    }
   }
 
 </script>
