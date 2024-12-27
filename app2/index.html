@@ -68,11 +68,11 @@
                  </li>`
         $("#classesList").append(c);
         // 直接載入第一個班級的資料
-        if ($("#students").html() == '') {
-          query(data[0].classroom);
-        }
-
       })
+      if ($("#students").html() == '') {
+        query(data[0].classroom);
+      }
+
     })
   }
 
@@ -149,6 +149,7 @@
       $.post("./api/delete.php", { id, classroom }, function (res) {
         // console.log('res');
         query(res);
+        getClasses();
       })
     }
   }
