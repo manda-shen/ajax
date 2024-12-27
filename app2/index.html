@@ -18,13 +18,13 @@
 
 <body>
 
-  <div class="container navbar-collapse">
+  <div class="container">
     <h1 class="header">學生資料管理系統</h1>
     <button class="btn btn-primary" onclick="create()">增加學生</button>
     <ul class="nav" id="classesList">
     </ul>
-    <div class="table">
-      <table id="students" class="w-100"></table>
+    <div class="classes">
+      <table id="students" class="w-100 m-auto"></table>
     </div>
 
     <div id="modal"></div>
@@ -60,22 +60,30 @@
     $.get("./api/get_classes.php", function (classes) {
       // console.log(classes);
       let data = JSON.parse(classes);
+      $("#classesList").html('');
+      // console.log(data);
       data.forEach(function (item, idx) {
         let c = `<li class="nav-item">
                    <a class="nav-link" href="javascript:query(${item.classroom})">${item.classroom}</a>
                  </li>`
         $("#classesList").append(c);
         // 直接載入第一個班級的資料
-        query(data[0].classroom);
+        if ($("#students").html() == '') {
+          query(data[0].classroom);
+        }
+
       })
     })
   }
+
+  let CreateModal;
+  // 把原本在下方function的CreateModal宣告成全域變數，讓外部(creat_form.php)也能使用。
 
   //載入新增資料的表單內容
   function create() {
     $.get("./create_form.php", function (html) {
       $("#modal").html(html);
-      let CreateModal = new bootstrap.Modal('#CreateModal');
+      CreateModal = new bootstrap.Modal('#CreateModal');
       CreateModal.show();
     })
   }
@@ -104,12 +112,27 @@
                    <td class='p-2'>${item.major}</td>
                    <td class='p-2'>${item.address}</td>
                    <td class='p-2'>
-                    <button class='btn btn-success'>編輯</button>
+                    <button class='btn btn-success edit' data-id='${item.id}'>編輯</button>
                     <button class='btn btn-danger' onclick='del(${item.id},${item.classroom})'>刪除</button>
                    </td>
                    </tr>`;
         $("#students").append(row);
       })
+
+      $(".edit").on("click", function () {
+        let id = $(this).data("id");
+        getEditForm(id);
+      })
+    })
+  }
+
+  //取得編輯資料表單內容
+  let EditModal;
+  function getEditForm(id) {
+    $.get("./edit_form.php", { id }, function (html) {
+      $("#modal").html(html);
+      EditModal = new bootstrap.Modal('#EditModal');
+      EditModal.show();
     })
   }
 
